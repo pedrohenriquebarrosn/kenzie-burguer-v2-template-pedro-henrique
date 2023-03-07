@@ -1,21 +1,15 @@
 import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { toast } from 'react-toastify';
 import {
   IUser,
   IRegisterFormValues,
   ILoginFormValues,
   IDefaultProviderProps,
+  IUserContext,
 } from './@types';
 import { api } from '../../services/api';
-
-interface IUserContext {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  user: IUser | null;
-  userRegister: (formData: IRegisterFormValues) => Promise<void>;
-  userLogin: (formData: ILoginFormValues) => Promise<void>;
-  userLogOut: () => void;
-}
 
 export const UserContext = createContext({} as IUserContext);
 
@@ -39,6 +33,7 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
           setUser(response.data);
           navigate('/shop');
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.log(error);
         } finally {
           setLoading(false);
@@ -53,10 +48,11 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
       setLoading(true);
       const response = await api.post('/users', formData);
       setUser(response.data.user);
-      localStorage.setItem('@TOKEN', response.data.acessToken);
+      localStorage.setItem('@TOKEN', response.data.accessToken);
+      toast.success('Usuário cadastrado com sucesso!');
       navigate('/');
     } catch (error) {
-      console.log(error);
+      toast.error('Não foi possível cadastrar o usuário');
     } finally {
       setLoading(false);
     }
@@ -67,11 +63,12 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
       setLoading(true);
       const response = await api.post('/login', formData);
       setUser(response.data.user);
-      localStorage.setItem('@TOKEN', response.data.acessToken);
+      localStorage.setItem('@TOKEN', response.data.accessToken);
       localStorage.setItem('@USERID', response.data.user.id);
+      toast.success('Login feito com sucesso!');
       navigate('/shop');
     } catch (error) {
-      console.log(error);
+      toast.error('Usuário ou senha incorretos');
     } finally {
       setLoading(false);
     }
@@ -80,6 +77,7 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
   const userLogOut = () => {
     setUser(null);
     localStorage.removeItem('@TOKEN');
+    localStorage.removeItem('@USERID');
     navigate('/');
   };
 

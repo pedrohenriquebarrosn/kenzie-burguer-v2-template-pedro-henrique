@@ -18,3 +18,12 @@ export interface ILoginFormValues {
   email: string;
   password: string;
 }
+
+export interface IUserContext {
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  user: IUser | null;
+  userRegister: (formData: IRegisterFormValues) => Promise<void>;
+  userLogin: (formData: ILoginFormValues) => Promise<void>;
+  userLogOut: () => void;
+}

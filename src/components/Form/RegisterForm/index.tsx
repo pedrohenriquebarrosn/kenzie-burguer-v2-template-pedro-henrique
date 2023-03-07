@@ -21,16 +21,16 @@ const RegisterForm = () => {
   return (
     <StyledForm onSubmit={handleSubmit(submit)}>
       <Input
-        label='Email'
-        type='text'
-        register={register('email')}
-        error={errors.email}
-      />
-      <Input
         label='Nome'
-        type='email'
+        type='text'
         register={register('name')}
         error={errors.name}
+      />
+      <Input
+        label='Email'
+        type='email'
+        register={register('email')}
+        error={errors.email}
       />
       <Input
         label='Senha'

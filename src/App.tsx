@@ -2,7 +2,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CartProvider } from './providers/CartContext/CartContext';
 import { UserProvider } from './providers/UserContext/UserContext';
-import Router from './routes';
+import Router from './Routes/routes';
 import { GlobalStyles } from './styles/global';
 
 const App = () => (
@@ -25,7 +25,6 @@ const App = () => (
       pauseOnHover
       theme='light'
     />
-    <ToastContainer />
   </>
 );
 

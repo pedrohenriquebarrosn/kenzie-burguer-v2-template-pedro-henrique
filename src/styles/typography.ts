@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable default-case */
 import styled, { css } from 'styled-components';
 import BaseTitle from './components/BaseTitle';
 
@@ -19,6 +21,7 @@ export const StyledTitle = styled(BaseTitle)<IStyledTitleProps>`
 
   text-align: ${({ textAlign }) => textAlign};
 
+  // eslint-disable-next-line consistent-return
   ${({ $fontSize }) => {
     switch ($fontSize) {
       case 'one':

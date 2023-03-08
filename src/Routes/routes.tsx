@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
-import { ProtectedRoutes } from './components/ProtectedRoutes';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import ShopPage from './pages/ShopPage';
+import { ProtectedRoutes } from '../components/ProtectedRoutes';
+import LoginPage from '../pages/LoginPage';
+import RegisterPage from '../pages/RegisterPage';
+import ShopPage from '../pages/ShopPage';
 
 const Router = () => (
   <Routes>

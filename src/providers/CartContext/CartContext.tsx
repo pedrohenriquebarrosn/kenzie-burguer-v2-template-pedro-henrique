@@ -16,14 +16,6 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
 
   const [products, setProducts] = useState<IProduct[]>([]);
   const [productCart, setProductCart] = useState<IProductCart[]>([]);
-  const [search, setSearch] = useState('');
-
-  const searchProducts = products.filter((product) =>
-    search === ''
-      ? true
-      : product.name.toLowerCase().includes(search.toLocaleLowerCase()) ||
-        product.category.toLowerCase().includes(search.toLocaleLowerCase())
-  );
 
   useEffect(() => {
     async function loadProductsData() {
@@ -50,6 +42,7 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
     } else {
       toast.error('O item já foi adicionado à lista!');
     }
+    // eslint-disable-next-line no-console
     console.log(productCart);
   };
 
@@ -81,6 +74,7 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
         removeAllProducts,
         products,
         productCart,
+        totalValue,
       }}
     >
       {children}

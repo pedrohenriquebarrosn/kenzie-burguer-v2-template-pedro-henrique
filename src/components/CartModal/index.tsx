@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { MdClose } from 'react-icons/md';
 import CartProductList from './CartProductList';
 import { StyledCartModalBox } from './style';

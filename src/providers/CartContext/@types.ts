@@ -26,4 +26,5 @@ export interface ICartContext {
   removeAllProducts: (id: number) => void;
   products: IProduct[];
   productCart: IProductCart[];
+  totalValue: number;
 }

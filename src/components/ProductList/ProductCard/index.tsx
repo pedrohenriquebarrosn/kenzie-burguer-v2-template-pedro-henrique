@@ -14,7 +14,7 @@ const ProductCard = ({ product }: IProductCard) => {
   return (
     <StyledProductCard>
       <div className='imageBox'>
-        <img src={product.img} alt='Hamburguer' />
+        <img src={product.img} alt={product.name} />
       </div>
       <div className='content'>
         <StyledTitle tag='h3' $fontSize='three'>
@@ -23,7 +23,7 @@ const ProductCard = ({ product }: IProductCard) => {
         <StyledParagraph className='category'>
           {product.category}
         </StyledParagraph>
-        <StyledParagraph className='price'>{product.price}</StyledParagraph>
+        <StyledParagraph className='price'>{product.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</StyledParagraph>
         <StyledButton
           $buttonSize='medium'
           $buttonStyle='green'

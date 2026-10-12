@@ -20,6 +20,8 @@ export interface IProductCart {
 
 export interface ICartContext {
   cartModal: boolean;
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   setCartModal: React.Dispatch<React.SetStateAction<boolean>>;
   addProductToCart: (currentProduct: IProductCart) => void;
   removeProductFromCart: (currentId: number) => void;

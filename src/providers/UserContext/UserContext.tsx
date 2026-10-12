@@ -1,135 +1,75 @@
 import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {
-  IUser,
-  IRegisterFormValues,
-  ILoginFormValues,
-  IDefaultProviderProps,
-  IUserContext,
-} from './@types';
-import { api } from '../../services/api';
+import { IUser, IRegisterFormValues, ILoginFormValues, IDefaultProviderProps, IUserContext } from './@types';
+import { getSessionUser, signUp, signIn, signOut, SupabaseUser } from '../../services/supabase';
 
 export const UserContext = createContext({} as IUserContext);
-
 const DEMO_SESSION = '@KENZIE_BURGUER_DEMO';
-const DEMO_USER: IUser = { id: 'demo', name: 'Visitante', email: 'demo@example.invalid' };
-
+const DEMO_USER: IUser = {id:'demo', name:'Visitante', email:'demo@example.invalid'};
+const asUser = (u: SupabaseUser): IUser => ({
+  id: u.id,
+  name: u.user_metadata?.name || u.email?.split('@')[0] || 'Usuário',
+  email: u.email,
+});
 
 export const UserProvider = ({ children }: IDefaultProviderProps) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<IUser | null>(null);
   const [isDemo, setIsDemo] = useState(false);
   const navigate = useNavigate();
-
   useEffect(() => {
     let active = true;
-    if (localStorage.getItem(DEMO_SESSION) === 'true') {
-      setUser(DEMO_USER);
-      setIsDemo(true);
-      setLoading(false);
-      return;
-    }
-    const token = localStorage.getItem('@TOKEN');
-    const id = localStorage.getItem('@USERID');
-    if (!token || !id) {
-      // Missing or incomplete session should never leave routes loading forever.
-      if (token || id) {
-        localStorage.removeItem('@TOKEN');
-        localStorage.removeItem('@USERID');
+    (async () => {
+      if (localStorage.getItem(DEMO_SESSION) === 'true') {
+        setUser(DEMO_USER); setIsDemo(true); setLoading(false); return;
       }
-      setLoading(false);
-      return;
-    }
-
-    const userAutoLogin = async () => {
       try {
-        const response = await api.get(`/users/${encodeURIComponent(id)}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (active) {
-          setUser(response.data);
-          navigate('/shop');
-        }
-      } catch (error: any) {
-        if (active) {
-          if ([401, 403].includes(error?.response?.status)) {
-            localStorage.removeItem('@TOKEN');
-            localStorage.removeItem('@USERID');
-          }
-          setUser(null);
-        }
-      } finally {
-        if (active) setLoading(false);
-      }
-    };
-    userAutoLogin();
+        const u = await getSessionUser();
+        if (active && u) setUser(asUser(u));
+      } catch { if (active) toast.error('Não foi possível recuperar sua sessão.'); }
+      finally { if (active) setLoading(false); }
+    })();
     return () => { active = false; };
-  }, [navigate]);
-
+  }, []);
   const userRegister = async (formData: IRegisterFormValues) => {
     setLoading(true);
     try {
-      await api.post('/users', formData);
-      // Registration and authentication are separate operations.
-      toast.success('Usuário cadastrado com sucesso! Faça login.');
+      const response = await signUp({...formData, app:'kenzieburguer'});
+      toast.success(response.session
+        ? 'Conta criada com sucesso. Faça login.'
+        : 'Cadastro recebido. Confirme seu email para ativar a conta.');
       navigate('/');
     } catch (error: any) {
-      toast.error(!error?.response || error.response.status >= 500
-        ? 'Serviço de cadastro indisponível.'
-        : 'Não foi possível cadastrar o usuário. Confira os dados.');
-    } finally {
-      setLoading(false);
-    }
+      toast.error(error?.message || 'Não foi possível cadastrar.');
+    } finally { setLoading(false); }
   };
-
   const userLogin = async (formData: ILoginFormValues) => {
     setLoading(true);
     try {
-      const response = await api.post('/login', formData);
-      const authenticatedUser = response.data?.user;
-      const token = response.data?.accessToken;
-      if (!authenticatedUser?.id || !token) {
-        throw new Error('Resposta de autenticação incompleta');
-      }
-      setUser(authenticatedUser);
-      localStorage.setItem('@TOKEN', token);
-      localStorage.setItem('@USERID', String(authenticatedUser.id));
+      const response = await signIn(formData);
+      if (!response.user?.id) throw new Error('Resposta inválida');
+      localStorage.removeItem(DEMO_SESSION);
+      setIsDemo(false);
+      setUser(asUser(response.user));
       toast.success('Login feito com sucesso!');
       navigate('/shop');
-    } catch (error: any) {
-      toast.error([400, 401, 403].includes(error?.response?.status)
-        ? 'Usuário ou senha incorretos'
-        : 'Serviço de login indisponível.');
-    } finally {
-      setLoading(false);
-    }
+    } catch(error: any) {
+      toast.error(error?.message || 'Não foi possível fazer login.');
+    } finally { setLoading(false); }
   };
-
   const startDemo = () => {
-    localStorage.removeItem('@TOKEN');
-    localStorage.removeItem('@USERID');
     localStorage.setItem(DEMO_SESSION, 'true');
-    setIsDemo(true);
-    setUser(DEMO_USER);
-    setLoading(false);
-    navigate('/shop');
+    setIsDemo(true); setUser(DEMO_USER);
+    setLoading(false); navigate('/shop');
   };
-
   const userLogOut = () => {
     localStorage.removeItem(DEMO_SESSION);
-    setIsDemo(false);
-    setUser(null);
-    localStorage.removeItem('@TOKEN');
-    localStorage.removeItem('@USERID');
+    setIsDemo(false); setUser(null);
+    void signOut();
     navigate('/');
   };
-
-  return (
-    <UserContext.Provider value={{
-      loading, setLoading, user, userRegister, userLogin, userLogOut, isDemo, startDemo,
-    }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{
+    loading, setLoading, user, userRegister, userLogin, userLogOut, isDemo, startDemo
+  }}>{children}</UserContext.Provider>;
 };

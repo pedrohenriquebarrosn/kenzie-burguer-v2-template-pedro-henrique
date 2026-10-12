@@ -36,7 +36,7 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
     setLoading(true);
     try {
       const response = await signUp({...formData, app:'kenzieburguer'});
-      toast.success(response.session
+      toast.success(response.access_token
         ? 'Conta criada com sucesso. Faça login.'
         : 'Cadastro recebido. Confirme seu email para ativar a conta.');
       navigate('/');

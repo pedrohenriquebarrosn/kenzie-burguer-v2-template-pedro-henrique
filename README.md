@@ -1,23 +1,21 @@
-# KenzieBurguer 2.0 — React & TypeScript Storefront
+# KenzieBurguer 2.0 — React + TypeScript Storefront
 
-An educational storefront developed as part of my Full Stack Web Development training. It demonstrates responsive React interfaces, a product catalog, search, and shopping-cart state management.
+Educational storefront originally built during the Kenzie Academy Brasil Full Stack program, with a real backend integration now implemented on an isolated recovery branch.
 
-> **Current status (12 October 2026):** This recovery branch has passed its TypeScript/Vite build and 2 Playwright browser tests. It adds a clearly labeled **local guest demonstration**, not a real shop. The older deployed version does **not** include these fixes yet.
+## Live preview (under validation)
 
-## What the demo does
+**[Open KenzieBurguer 2.0 preview](https://kenzie-burguer-v2-template-pedro-henrique-eoyd-p7n8jly2q.vercel.app/)**.
 
-- Enter the storefront through **Acessar demonstração**, without creating a real account.
-- Browse six **fictitious** products with illustrative images and prices.
-- Search the catalog by product name.
-- Add products to the cart, remove individual items, and clear all items.
-- View the dynamically calculated total in Brazilian reais.
-- Log out and return to the entry page.
+**This is not a commercial store.** The six catalog products, images and prices are illustrative. There is no order placement, checkout, payment processing or actual inventory.
 
-Guest mode is client-side only. There are **no real payments, orders, customers, inventory synchronization, or secure accounts** in this demonstration. The original app's registration and login screens remain, but the legacy backend has not been restored.
+- **Guest demonstration:** enter without an account, browse products, search, and use an in-memory cart.
+- **Authenticated mode:** Supabase Auth registration/login, protected storefront, server-backed catalog and cart per signed-in account.
+- **Persistence:** cart entries are stored in PostgreSQL table `kenzieburguer_cart_items`, and RLS limits access to their authenticated owner.
+- **Email limitation:** Supabase built-in SMTP sends to approved team emails only; real visitor email confirmation requires additional SMTP/redirect configuration. Do not interpret a successful build as verified email delivery.
 
 ## Stack
 
-React 18 · TypeScript · Vite · React Router · Axios · React Hook Form · Styled Components · Material UI · React Toastify
+React 18 · TypeScript · Vite · React Router · React Hook Form · Styled Components · Material UI · React Toastify · Supabase Auth · PostgreSQL · Row Level Security.
 
 ## Run locally
 
@@ -29,28 +27,13 @@ yarn install --frozen-lockfile
 yarn dev
 ```
 
-Open the local address displayed by Vite, then click **Acessar demonstração**.
+The public client values `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` are optional overrides in `src/services/supabase.js`. Do not put secret keys in a client bundle.
 
-## Validate
+## Verification
 
-A GitHub Actions job on the recovery branch installs dependencies, builds the TypeScript/Vite project, and runs browser tests in Chromium.
+- [Recovery PR](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/pull/1) (draft).
+- [Passing guest UI and API-contract tests](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/actions/runs/38288227055) test login, HTTP-backed cart rehydration, search and guest behavior with simulated Supabase responses.
+- Staging deployment with the backend integration reached `READY`; further changes must be built and deployed before replacing this URL.
+- **Pending:** live email confirmation, authenticated catalog/cart operations and cross-user isolation, checked end-to-end against the actual hosted Supabase instance.
 
-- **[Passing build and browser test](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/actions/runs/38261460891)** — 2/2 Playwright tests passed.
-- The tests cover the guest catalog, search, cart, clearing items, logout, and a mobile viewport.
-- Source: [`tests/recovery.spec.js`](tests/recovery.spec.js).
-
-These checks do not validate real backend authentication, persistence, or payments.
-
-## Backend integration (not yet restored)
-
-The original frontend still defaults to the legacy endpoint `https://hamburgueria-kenzie-v2.herokuapp.com`. A compatible replacement can be configured at build time using `VITE_API_BASE_URL`.
-
-Expected routes include `POST /users`, `POST /login` (returning `{ user, accessToken }`), `GET /users/:id` with a bearer token, and `GET /products` returning an array of product records. Real backend operation and CORS compatibility remain unverified.
-
-See [recovery notes](docs/RECOVERY_2026-10-12.md) for the exact boundaries and outstanding work.
-
-## Project context
-
-Educational project; not a production commerce application. The recovery work is isolated in a pull request and has not been merged to `main` or deployed to the existing public site.
-
-[LinkedIn](https://www.linkedin.com/in/pedro-henrique-barros-nascimento-2bb684251/) · [GitHub profile](https://github.com/pedrohenriquebarrosn)
+Production remains unchanged. Do not claim real orders or economic transactions from this demonstration.

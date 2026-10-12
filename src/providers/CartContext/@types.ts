@@ -23,7 +23,7 @@ export interface ICartContext {
   setCartModal: React.Dispatch<React.SetStateAction<boolean>>;
   addProductToCart: (currentProduct: IProductCart) => void;
   removeProductFromCart: (currentId: number) => void;
-  removeAllProducts: (id: number) => void;
+  removeAllProducts: () => void;
   products: IProduct[];
   productCart: IProductCart[];
   totalValue: number;

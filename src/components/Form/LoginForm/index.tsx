@@ -32,7 +32,7 @@ const LoginForm = () => {
         register={register('password')}
         error={errors.password}
       />
-      <StyledButton $buttonSize='default' $buttonStyle='green'>
+      <StyledButton type='submit' $buttonSize='default' $buttonStyle='green'>
         Entrar
       </StyledButton>
     </StyledForm>

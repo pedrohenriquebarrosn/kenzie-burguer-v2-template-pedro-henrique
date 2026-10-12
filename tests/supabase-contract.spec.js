@@ -38,7 +38,7 @@ test('authenticated customer loads live API catalog, persists cart, removes and 
       else cart.clear();
       return route.fulfill({status:200,headers,body:'[]'});
     }
-    return route.fulfill({status:200,headers,body:JSON.stringify([...cart].map(product_id=>({product_id})))});
+    return route.fulfill({status:200,headers,body:JSON.stringify([...cart].map(([product_id, quantity])=>({product_id, quantity})))});
   });
   await page.goto('/');
   await page.getByLabel('Seu e-mail').fill('burger@example.invalid');
@@ -52,12 +52,14 @@ test('authenticated customer loads live API catalog, persists cart, removes and 
   await expect(page.locator('.total')).toContainText('45,80');
   await expect(page.getByText('R$ 22,90 / unidade')).toBeVisible();
   await expect(page.getByRole('button',{name:/Diminuir quantidade de Burger Clássico/})).toBeVisible();
+  await expect.poll(() => cart.get(1)).toBe(2);
   await page.reload();
   await page.getByRole('button',{name:'Abrir carrinho'}).click();
   await expect(page.locator('.total')).toContainText('45,80');
   expect(cart.get(1)).toBe(2);
   await page.getByRole('button',{name:/Diminuir quantidade de Burger Clássico/}).click();
   await expect(page.locator('.total')).toContainText('22,90');
+  await expect.poll(() => cart.get(1)).toBe(1);
   await page.reload();
   await page.getByRole('button',{name:'Abrir carrinho'}).click();
   await expect(page.locator('.total')).toContainText('22,90');

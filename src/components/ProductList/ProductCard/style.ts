@@ -21,15 +21,15 @@ export const StyledProductCard = styled.li`
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 190px;
-    padding: 15px;
+    min-height: 205px;
+    padding: 0;
     background: #f1f6f3;
 
     img {
       display: block;
       width: 100%;
-      height: 176px;
-      object-fit: contain;
+      height: 205px;
+      object-fit: cover;
     }
   }
 

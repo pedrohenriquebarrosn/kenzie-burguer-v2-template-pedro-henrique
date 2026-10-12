@@ -10,7 +10,7 @@ import { CartContext } from '../../providers/CartContext/CartContext';
 import { UserContext } from '../../providers/UserContext/UserContext';
 
 const Header = () => {
-  const { setCartModal } = useContext(CartContext);
+  const { setCartModal, productCart } = useContext(CartContext);
   const { userLogOut } = useContext(UserContext);
 
   const openModal = () => {
@@ -31,12 +31,14 @@ const Header = () => {
             <div className='buttons'>
               <button
                 type='button'
+                className='cartButton'
                 aria-label='Abrir carrinho'
                 onClick={() => {
                   openModal();
                 }}
               >
-                <MdShoppingCart size={28} />
+                <MdShoppingCart size={26} />
+                {productCart.length > 0 && <span className='cartCount' aria-hidden='true'>{productCart.length}</span>}
               </button>
               <button type='button' aria-label='Sair' onClick={() => userLogOut()}>
                 <MdLogout size={28} />

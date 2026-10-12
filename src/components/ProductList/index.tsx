@@ -4,11 +4,14 @@ import { StyledProductList } from './style';
 import { CartContext } from '../../providers/CartContext/CartContext';
 
 const ProductList = () => {
-  const { products } = useContext(CartContext);
+  const { products, searchTerm } = useContext(CartContext);
+  const filteredProducts = products.filter((product) =>
+    product.name.toLocaleLowerCase('pt-BR').includes(searchTerm.toLocaleLowerCase('pt-BR'))
+  );
 
   return (
     <StyledProductList>
-      {products.map((product) => (
+      {filteredProducts.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
     </StyledProductList>

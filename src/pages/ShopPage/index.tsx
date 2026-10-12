@@ -6,14 +6,21 @@ import ProductList from '../../components/ProductList';
 
 import { StyledContainer } from '../../styles/grid';
 import { CartContext } from '../../providers/CartContext/CartContext';
+import { UserContext } from '../../providers/UserContext/UserContext';
 
 const ShopPage = () => {
   const { cartModal } = useContext(CartContext);
+  const { isDemo } = useContext(UserContext);
 
   return (
     <StyledShopPage>
       {cartModal && <CartModal />}
       <Header />
+      {isDemo && (
+        <p role='status' style={{ padding: '12px', textAlign: 'center', background: '#fff3d3', color: '#212529' }}>
+          Loja demonstrativa: produtos e preços fictícios. Não há pedidos, pagamentos ou contas reais.
+        </p>
+      )}
       <main>
         <StyledContainer containerWidth={1300}>
           <ProductList />

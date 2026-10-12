@@ -1,4 +1,5 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../providers/UserContext/UserContext';
 import { StyledLoginPage } from './style';
 import LoginForm from '../../components/Form/LoginForm';
@@ -9,7 +10,11 @@ import { StyledContainer, StyledGridBox } from '../../styles/grid';
 import { StyledParagraph, StyledTitle } from '../../styles/typography';
 
 const LoginPage = () => {
-  const { startDemo } = useContext(UserContext);
+  const { startDemo, user, loading } = useContext(UserContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!loading && user) navigate('/shop', { replace: true });
+  }, [loading, user, navigate]);
   return (
   <StyledLoginPage>
     <StyledContainer>

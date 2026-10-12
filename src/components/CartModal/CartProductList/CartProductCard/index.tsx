@@ -1,31 +1,51 @@
-/* eslint-disable object-shorthand */
-import { MdDelete } from 'react-icons/md';
-
+import { MdAdd, MdRemove, MdDelete } from 'react-icons/md';
 import { useContext } from 'react';
 import { StyledCartProductCard } from './style';
 import { StyledTitle } from '../../../../styles/typography';
 import { IProductCart } from '../../../../providers/CartContext/@types';
 import { CartContext } from '../../../../providers/CartContext/CartContext';
+import { getProductPhoto } from '../../../../providers/CartContext/productPhotos';
 
-const CartProductCard = ({ name, img, id, category, price }: IProductCart) => {
-  const { removeProductFromCart } = useContext(CartContext);
+const money = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+const CartProductCard = ({ name, img, id, category, price, quantity }: IProductCart) => {
+  const { changeProductQuantity, removeProductFromCart } = useContext(CartContext);
 
   return (
     <StyledCartProductCard>
       <div className='imageBox'>
-        <img src={img} alt='Hamburguer' />
+        <img
+          src={getProductPhoto(id, img)}
+          alt={name}
+          onError={(event) => {
+            event.currentTarget.onerror = null;
+            event.currentTarget.src = img;
+          }}
+        />
       </div>
       <div className='contentBox'>
-        <StyledTitle tag='h3' $fontSize='three'>
-          {name}
-        </StyledTitle>
-        <button
-          type='button'
-          aria-label='Remover'
-          onClick={() => removeProductFromCart(id)}
-        >
-          <MdDelete size={24} />
-        </button>
+        <div className='productInfo'>
+          <StyledTitle tag='h3' $fontSize='three'>{name}</StyledTitle>
+          <p className='unitPrice'>{money(Number(price))} / unidade</p>
+          <div className='quantityControls' aria-label={`Quantidade de ${name}`}>
+            <button type='button' aria-label={`Diminuir quantidade de ${name}`}
+              onClick={() => changeProductQuantity(id, -1)}>
+              <MdRemove size={18} />
+            </button>
+            <output aria-live='polite' aria-label={`Quantidade atual: ${quantity}`}>{quantity}</output>
+            <button type='button' aria-label={`Aumentar quantidade de ${name}`}
+              onClick={() => changeProductQuantity(id, 1)}>
+              <MdAdd size={18} />
+            </button>
+          </div>
+        </div>
+        <div className='itemActions'>
+          <button type='button' className='removeItem' aria-label={`Remover ${name}`}
+            onClick={() => removeProductFromCart(id)}>
+            <MdDelete size={20} />
+          </button>
+          <span className='lineSubtotal'>{money(Number(price) * quantity)}</span>
+        </div>
       </div>
     </StyledCartProductCard>
   );

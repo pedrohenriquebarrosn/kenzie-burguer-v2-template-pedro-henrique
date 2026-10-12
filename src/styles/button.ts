@@ -42,7 +42,7 @@ export const StyledButtonCSS = css<IStyledButtonProps>`
           color: ${theme.colors.white};
           background: ${theme.colors.primary};
           &:hover {
-            opacity: 0.5;
+            background: #188849;
           }
         `;
       case 'gray':

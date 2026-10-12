@@ -7,9 +7,12 @@ test('visitor uses fictitious catalog, search and cart in local demo', async ({ 
   await expect(page.getByRole('heading', { name: 'Burger Clássico (demo)' })).toBeVisible();
 
   await page.getByRole('searchbox', { name: 'Pesquisar produtos' }).fill('Batata');
+  await expect(page.getByRole('heading', { name: 'Burger Clássico (demo)' })).toBeVisible();
+  await page.getByRole('button', { name: 'Pesquisar', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Batata Frita (demo)' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Burger Clássico (demo)' })).toHaveCount(0);
   await page.getByRole('searchbox', { name: 'Pesquisar produtos' }).fill('');
+  await page.getByRole('button', { name: 'Pesquisar', exact: true }).click();
 
   await page.getByRole('button', { name: 'Adicionar' }).first().click();
   await page.getByRole('button', { name: 'Abrir carrinho' }).click();

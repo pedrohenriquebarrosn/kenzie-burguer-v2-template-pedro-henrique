@@ -25,4 +25,16 @@ export const StyledCartProductList = styled.div`
          color: ${({ theme }) => theme.colors.gray300};
       }
    }
+
+  ul {
+    height: auto;
+    max-height: min(43vh, 340px);
+    overflow: auto;
+    gap: 15px;
+  }
+  .totalBox {
+    margin-top: 16px;
+    border-top: 1px solid #e9eee9;
+    .total { font-size: 1.1rem; color: #236d3e; }
+  }
 `;

@@ -2,7 +2,7 @@
 // All user data is protected by PostgreSQL Row Level Security.
 const BASE = import.meta.env.VITE_SUPABASE_URL || "https://bzhappkbfjzggghcpxht.supabase.co";
 const KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_T02uB_fBFkzZ_H1u_thK9Q_l_bA0XYT";
-const STORAGE = 'kenzie_APP_auth_v1';
+const STORAGE = 'kenzie_burger_auth_v1';
 const authHeaders = (token) => ({
   apikey: KEY,
   'Content-Type': 'application/json',
@@ -31,7 +31,10 @@ async function request(path, { method = 'GET', token, body, headers = {} } = {})
   return payload;
 }
 export async function signUp({ email, password, ...metadata }) {
-  return request('/auth/v1/signup', {
+  // Confirmation emails must return to THIS app; add its origin to Supabase Auth
+  // > URL Configuration > Redirect URLs before onboarding external users.
+  const redirect = encodeURIComponent(window.location.origin + '/');
+  return request('/auth/v1/signup?redirect_to=' + redirect, {
     method: 'POST', body: { email, password, data: metadata }
   });
 }
@@ -41,6 +44,15 @@ export async function signIn({ email, password }) {
   return session;
 }
 export async function getSessionUser() {
+  // GoTrue email confirmations may redirect back with session tokens in a
+  // URL fragment. Store them for the app and scrub them from browser history.
+  const fragment = new URLSearchParams(window.location.hash.slice(1));
+  const redirectedToken = fragment.get('access_token');
+  const redirectedRefresh = fragment.get('refresh_token');
+  if (redirectedToken && redirectedRefresh) {
+    writeSession({access_token: redirectedToken, refresh_token: redirectedRefresh});
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
   let session = readSession();
   if (!session?.access_token) return null;
   try {

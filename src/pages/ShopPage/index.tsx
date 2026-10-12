@@ -16,11 +16,11 @@ const ShopPage = () => {
     <StyledShopPage>
       {cartModal && <CartModal />}
       <Header />
-      {isDemo && (
-        <p role='status' style={{ padding: '12px', textAlign: 'center', background: '#fff3d3', color: '#212529' }}>
-          Loja demonstrativa: produtos e preços fictícios. Não há pedidos, pagamentos ou contas reais.
-        </p>
-      )}
+      <p role='status' style={{ padding: '12px', textAlign: 'center', background: '#fff3d3', color: '#212529' }}>
+        {isDemo
+          ? 'Loja demonstrativa: produtos e preços fictícios. Não há pedidos, pagamentos ou contas reais.'
+          : 'Projeto educacional: catálogo e preços ilustrativos. Carrinho salvo na conta; pedidos e pagamentos não estão disponíveis.'}
+      </p>
       <main>
         <StyledContainer containerWidth={1300}>
           <ProductList />

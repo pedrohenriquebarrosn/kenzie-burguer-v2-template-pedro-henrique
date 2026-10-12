@@ -31,13 +31,14 @@ const Header = () => {
             <div className='buttons'>
               <button
                 type='button'
+                aria-label='Abrir carrinho'
                 onClick={() => {
                   openModal();
                 }}
               >
                 <MdShoppingCart size={28} />
               </button>
-              <button type='button' onClick={() => userLogOut()}>
+              <button type='button' aria-label='Sair' onClick={() => userLogOut()}>
                 <MdLogout size={28} />
               </button>
             </div>

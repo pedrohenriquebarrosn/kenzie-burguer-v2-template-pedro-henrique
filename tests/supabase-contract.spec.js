@@ -58,7 +58,7 @@ test('authenticated customer loads live API catalog, persists cart, removes and 
 });
 
 test('registration does not claim success when Supabase refuses unapproved email',async({page})=>{
-  await page.route(/\/auth\/v1\/signup$/,route=>route.fulfill({
+  await page.route(/\/auth\/v1\/signup\?redirect_to=/,route=>route.fulfill({
     status:422,headers,body:JSON.stringify({msg:'Email address not authorized'})
   }));
   await page.goto('/register');

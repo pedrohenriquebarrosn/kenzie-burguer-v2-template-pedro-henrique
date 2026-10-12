@@ -8,22 +8,37 @@ test('demo catalog shows six products, search empty state, and a live cart badge
   await expect(page.getByText(/produtos no catálogo/)).toBeVisible();
 
   const search = page.getByRole('searchbox', { name: 'Pesquisar produtos' });
+  const submitSearch = page.getByRole('button', { name: 'Pesquisar', exact: true });
   await search.fill('s');
+  // Typing alone does not change the catalog.
+  await expect(page.getByRole('heading', { name: 'Nuggets (demo)' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Adicionar' })).toHaveCount(6);
+  await submitSearch.click();
   await expect(page.getByRole('heading', { name: 'Suco (demo)' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Nuggets (demo)' })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Adicionar' })).toHaveCount(1);
 
   await search.fill('dupl');
+  // The previous committed filter remains until a new click or Enter.
+  await expect(page.getByRole('heading', { name: 'Suco (demo)' })).toBeVisible();
+  await search.press('Enter');
   await expect(page.getByRole('heading', { name: 'Burger Duplo (demo)' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Burger Clássico (demo)' })).toHaveCount(0);
+
   await search.fill('');
+  await expect(page.getByRole('heading', { name: 'Burger Clássico (demo)' })).toHaveCount(0);
+  await submitSearch.click();
+  await expect(page.getByRole('button', { name: 'Adicionar' })).toHaveCount(6);
 
   const coverImage = page.getByRole('img', { name: 'Burger Clássico (demo)' }).first();
   await expect(coverImage).toHaveAttribute('src', /images\.unsplash\.com\/photo-/);
 
-  await page.getByRole('searchbox', { name: 'Pesquisar produtos' }).fill('zzzz-sem-resultado');
+  await search.fill('zzzz-sem-resultado');
+  await expect(page.getByRole('button', { name: 'Adicionar' })).toHaveCount(6);
+  await submitSearch.click();
   await expect(page.getByRole('heading', { name: 'Nenhum produto encontrado' })).toBeVisible();
-  await page.getByRole('searchbox', { name: 'Pesquisar produtos' }).fill('');
+  await search.fill('');
+  await submitSearch.click();
 
   const addFirst = page.getByRole('button', { name: 'Adicionar' }).first();
   await addFirst.click();

@@ -12,13 +12,24 @@ import { api } from '../../services/api';
 
 export const UserContext = createContext({} as IUserContext);
 
+const DEMO_SESSION = '@KENZIE_BURGUER_DEMO';
+const DEMO_USER: IUser = { id: 'demo', name: 'Visitante', email: 'demo@example.invalid' };
+
+
 export const UserProvider = ({ children }: IDefaultProviderProps) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<IUser | null>(null);
+  const [isDemo, setIsDemo] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     let active = true;
+    if (localStorage.getItem(DEMO_SESSION) === 'true') {
+      setUser(DEMO_USER);
+      setIsDemo(true);
+      setLoading(false);
+      return;
+    }
     const token = localStorage.getItem('@TOKEN');
     const id = localStorage.getItem('@USERID');
     if (!token || !id) {
@@ -95,7 +106,19 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
     }
   };
 
+  const startDemo = () => {
+    localStorage.removeItem('@TOKEN');
+    localStorage.removeItem('@USERID');
+    localStorage.setItem(DEMO_SESSION, 'true');
+    setIsDemo(true);
+    setUser(DEMO_USER);
+    setLoading(false);
+    navigate('/shop');
+  };
+
   const userLogOut = () => {
+    localStorage.removeItem(DEMO_SESSION);
+    setIsDemo(false);
     setUser(null);
     localStorage.removeItem('@TOKEN');
     localStorage.removeItem('@USERID');
@@ -104,7 +127,7 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
 
   return (
     <UserContext.Provider value={{
-      loading, setLoading, user, userRegister, userLogin, userLogOut,
+      loading, setLoading, user, userRegister, userLogin, userLogOut, isDemo, startDemo,
     }}>
       {children}
     </UserContext.Provider>

@@ -10,7 +10,7 @@ const products=[
   {id:2,name:'Batata Frita',category:'Acompanhamentos',price:13.90,img:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>'}
 ];
 test('authenticated customer loads live API catalog, persists cart, removes and logs out',async({page})=>{
-  const cart=new Set();
+  const cart=new Map();
   let authRequests=0;
   await page.route(/\/auth\/v1\/token\?grant_type=password$/,route=>{
     authRequests++;
@@ -24,8 +24,13 @@ test('authenticated customer loads live API catalog, persists cart, removes and 
   await page.route(/\/rest\/v1\/kenzieburguer_cart_items.*/,route=>{
     const req=route.request(),method=req.method(),url=new URL(req.url());
     if(method==='POST'){
-      for(const item of req.postDataJSON()) cart.add(item.product_id);
-      return route.fulfill({status:201,headers,body:JSON.stringify([...cart].map(product_id=>({product_id})))});
+      for(const item of req.postDataJSON()) cart.set(item.product_id, item.quantity || 1);
+      return route.fulfill({status:201,headers,body:JSON.stringify([...cart].map(([product_id, quantity])=>({product_id, quantity})))});
+    }
+    if(method==='PATCH'){
+      const id=Number((url.searchParams.get('product_id')||'').replace('eq.',''));
+      cart.set(id,req.postDataJSON().quantity);
+      return route.fulfill({status:200,headers,body:JSON.stringify([{product_id:id,quantity:cart.get(id)}])});
     }
     if(method==='DELETE'){
       const id=url.searchParams.get('product_id');
@@ -42,12 +47,21 @@ test('authenticated customer loads live API catalog, persists cart, removes and 
   await expect(page).toHaveURL(/\/shop$/);
   await expect(page.getByRole('heading',{name:'Burger Clássico'})).toBeVisible();
   await page.getByRole('button',{name:'Adicionar'}).first().click();
+  await page.getByRole('button',{name:'Adicionar'}).first().click();
   await page.getByRole('button',{name:'Abrir carrinho'}).click();
+  await expect(page.locator('.total')).toContainText('45,80');
+  await expect(page.getByText('R$ 22,90 / unidade')).toBeVisible();
+  await expect(page.getByRole('button',{name:/Diminuir quantidade de Burger Clássico/})).toBeVisible();
+  await page.reload();
+  await page.getByRole('button',{name:'Abrir carrinho'}).click();
+  await expect(page.locator('.total')).toContainText('45,80');
+  expect(cart.get(1)).toBe(2);
+  await page.getByRole('button',{name:/Diminuir quantidade de Burger Clássico/}).click();
   await expect(page.locator('.total')).toContainText('22,90');
   await page.reload();
   await page.getByRole('button',{name:'Abrir carrinho'}).click();
   await expect(page.locator('.total')).toContainText('22,90');
-  expect(cart.has(1)).toBe(true);
+  expect(cart.get(1)).toBe(1);
   await page.getByRole('button',{name:'Remover todos'}).click();
   await expect(page.getByRole('heading',{name:'Sua sacola está vazia'})).toBeVisible();
   expect(cart.size).toBe(0);

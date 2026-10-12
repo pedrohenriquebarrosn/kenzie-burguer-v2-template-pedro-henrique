@@ -15,14 +15,15 @@ const App = () => (
     </UserProvider>
     <ToastContainer
       position='top-right'
-      autoClose={2000}
+      autoClose={2500}
+      limit={2}
       hideProgressBar={false}
       newestOnTop={false}
       closeOnClick
       rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
+      pauseOnFocusLoss={false}
+      draggable={false}
+      pauseOnHover={false}
       theme='light'
     />
   </>

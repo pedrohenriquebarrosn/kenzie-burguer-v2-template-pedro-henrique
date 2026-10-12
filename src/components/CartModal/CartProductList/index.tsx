@@ -37,7 +37,7 @@ const CartProductList = () => {
       <StyledButton
         $buttonSize='default'
         $buttonStyle='gray'
-        onClick={() => removeAllProducts(0)}
+        onClick={() => removeAllProducts()}
       >
         Remover todos
       </StyledButton>

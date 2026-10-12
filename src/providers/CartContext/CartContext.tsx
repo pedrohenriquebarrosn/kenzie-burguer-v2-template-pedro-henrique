@@ -136,7 +136,7 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
         ? cartRef.current.map((row) => row.id === product.id ? { ...row, quantity: next } : row)
         : [...cartRef.current, { ...product, quantity: next }];
     replaceCart(updated);
-    const label = product.name.replace(/\\s*\\(demo\\)\\s*/gi, '').trim();
+    const label = product.name.replace(/\s*\(demo\)\s*/gi, '').trim();
     const feedback = next === 0
       ? `${label} removido da sacola`
       : `${label}: ${next} ${next === 1 ? 'unidade' : 'unidades'} na sacola`;

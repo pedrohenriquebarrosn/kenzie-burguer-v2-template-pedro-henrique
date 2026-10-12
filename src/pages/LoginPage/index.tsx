@@ -1,12 +1,16 @@
+import { useContext } from 'react';
+import { UserContext } from '../../providers/UserContext/UserContext';
 import { StyledLoginPage } from './style';
 import LoginForm from '../../components/Form/LoginForm';
 import IllustrationBox from '../../components/IllustrationBox';
 
-import { StyledButtonLink } from '../../styles/button';
+import { StyledButton, StyledButtonLink } from '../../styles/button';
 import { StyledContainer, StyledGridBox } from '../../styles/grid';
 import { StyledParagraph, StyledTitle } from '../../styles/typography';
 
-const LoginPage = () => (
+const LoginPage = () => {
+  const { startDemo } = useContext(UserContext);
+  return (
   <StyledLoginPage>
     <StyledContainer>
       <div className='flexGrid'>
@@ -26,6 +30,13 @@ const LoginPage = () => (
             >
               Cadastrar
             </StyledButtonLink>
+            <StyledParagraph textAlign='center' fontColor='gray'>
+              Ou explore o catálogo e o carrinho, sem usar uma conta real:
+            </StyledParagraph>
+            <StyledButton type='button' onClick={startDemo}
+              $buttonSize='default' $buttonStyle='green'>
+              Acessar demonstração
+            </StyledButton>
           </StyledGridBox>
         </div>
         <div className='right'>
@@ -34,6 +45,7 @@ const LoginPage = () => (
       </div>
     </StyledContainer>
   </StyledLoginPage>
-);
+  );
+};
 
 export default LoginPage;

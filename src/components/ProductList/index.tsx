@@ -9,15 +9,15 @@ const ProductList = () => {
   // not Nuggets. Full-name prefix ranks before other word-prefix matches.
   const normalize = (value: string) => value
     .normalize('NFD')
-    .replace(/[\\u0300-\\u036f]/g, '')
-    .replace(/\\s*\\(demo\\)\\s*/gi, '')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s*\(demo\)\s*/gi, '')
     .trim()
     .toLocaleLowerCase('pt-BR');
   const query = normalize(searchTerm);
   const filteredProducts = !query ? products : products
     .map((product, index) => {
       const name = normalize(product.name);
-      const words = name.split(/\\s+/);
+      const words = name.split(/\s+/);
       const rank = name.startsWith(query) ? 0 : words.some((word) => word.startsWith(query)) ? 1 : 2;
       return { product, index, rank };
     })

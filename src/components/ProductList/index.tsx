@@ -10,10 +10,17 @@ const ProductList = () => {
   );
 
   return (
-    <StyledProductList>
-      {filteredProducts.map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+    <StyledProductList aria-label='Produtos do catálogo'>
+      {filteredProducts.length > 0
+        ? filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))
+        : (
+          <li className='emptyState'>
+            <h2>Nenhum produto encontrado</h2>
+            <p>Tente pesquisar por outro nome.</p>
+          </li>
+        )}
     </StyledProductList>
   );
 };

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { toast } from 'react-toastify';
 import {
@@ -8,16 +8,25 @@ import {
   IProductCart,
 } from './@types';
 import { api } from '../../services/api';
+import { UserContext } from '../UserContext/UserContext';
+import { demoProducts } from './demoProducts';
 
 export const CartContext = createContext({} as ICartContext);
 
 export const CartProvider = ({ children }: IDefaultProviderProps) => {
   const [cartModal, setCartModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const { isDemo } = useContext(UserContext);
 
   const [products, setProducts] = useState<IProduct[]>([]);
   const [productCart, setProductCart] = useState<IProductCart[]>([]);
 
   useEffect(() => {
+    if (isDemo) {
+      setProducts(demoProducts);
+      return;
+    }
+    setProducts([]);
     async function loadProductsData() {
       try {
         const token = localStorage.getItem('@TOKEN');
@@ -33,7 +42,7 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
       }
     }
     loadProductsData();
-  }, []);
+  }, [isDemo]);
 
   const addProductToCart = (currentProduct: IProductCart) => {
     if (!productCart.some((product) => product.id === currentProduct.id)) {
@@ -68,6 +77,8 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
       value={{
         cartModal,
         setCartModal,
+        searchTerm,
+        setSearchTerm,
         addProductToCart,
         removeProductFromCart,
         removeAllProducts,

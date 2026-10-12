@@ -17,7 +17,7 @@ export const StyledCartProductCard = styled.li`
     border-radius: 12px;
     background: #f3f7f4;
 
-    img { width: 100%; height: 100%; object-fit: contain; }
+    img { width: 100%; height: 100%; object-fit: cover; }
   }
 
   .contentBox {

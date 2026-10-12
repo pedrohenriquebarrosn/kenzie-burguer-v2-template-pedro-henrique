@@ -9,6 +9,22 @@ export const CartContext = createContext({} as ICartContext);
 
 type StoredCartRow = { product_id: number; quantity?: number };
 const MAX_QUANTITY = 99;
+const CART_FEEDBACK_ID = 'burger-cart-feedback';
+
+// Keep one compact notification updated during rapid changes; never stack
+// dozens of success messages while the customer taps Add or + repeatedly.
+const showCartFeedback = (message: string) => {
+  if (toast.isActive(CART_FEEDBACK_ID)) {
+    toast.update(CART_FEEDBACK_ID, {
+      render: message,
+      type: 'success',
+      autoClose: 1800,
+      closeOnClick: true,
+    });
+  } else {
+    toast.success(message, { toastId: CART_FEEDBACK_ID, autoClose: 1800 });
+  }
+};
 
 export const CartProvider = ({ children }: IDefaultProviderProps) => {
   const [cartModal, setCartModal] = useState(false);
@@ -120,6 +136,11 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
         ? cartRef.current.map((row) => row.id === product.id ? { ...row, quantity: next } : row)
         : [...cartRef.current, { ...product, quantity: next }];
     replaceCart(updated);
+    const label = product.name.replace(/\\s*\\(demo\\)\\s*/gi, '').trim();
+    const feedback = next === 0
+      ? `${label} removido da sacola`
+      : `${label}: ${next} ${next === 1 ? 'unidade' : 'unidades'} na sacola`;
+    showCartFeedback(feedback);
     persistChange(product.id, previous, next, scopeRef.current);
   };
 
@@ -141,6 +162,7 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
   const removeAllProducts = () => {
     if (cartRef.current.length === 0 || syncFailedRef.current) return;
     replaceCart([]);
+    showCartFeedback('Sacola esvaziada');
     if (isDemo) return;
     const scope = scopeRef.current;
     writeQueue.current = writeQueue.current.then(async () => {

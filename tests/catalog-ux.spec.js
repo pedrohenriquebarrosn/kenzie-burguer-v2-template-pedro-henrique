@@ -7,6 +7,20 @@ test('demo catalog shows six products, search empty state, and a live cart badge
   await expect(page.getByText(/Loja demonstrativa/)).toBeVisible();
   await expect(page.getByText(/produtos no catálogo/)).toBeVisible();
 
+  const search = page.getByRole('searchbox', { name: 'Pesquisar produtos' });
+  await search.fill('s');
+  await expect(page.getByRole('heading', { name: 'Suco (demo)' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Nuggets (demo)' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Adicionar' })).toHaveCount(1);
+
+  await search.fill('dupl');
+  await expect(page.getByRole('heading', { name: 'Burger Duplo (demo)' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Burger Clássico (demo)' })).toHaveCount(0);
+  await search.fill('');
+
+  const coverImage = page.getByRole('img', { name: 'Burger Clássico (demo)' }).first();
+  await expect(coverImage).toHaveAttribute('src', /images\.unsplash\.com\/photo-/);
+
   await page.getByRole('searchbox', { name: 'Pesquisar produtos' }).fill('zzzz-sem-resultado');
   await expect(page.getByRole('heading', { name: 'Nenhum produto encontrado' })).toBeVisible();
   await page.getByRole('searchbox', { name: 'Pesquisar produtos' }).fill('');
@@ -16,6 +30,9 @@ test('demo catalog shows six products, search empty state, and a live cart badge
   await addFirst.click();
   await addFirst.click();
   await expect(page.locator('.cartCount')).toHaveText('3');
+  await expect(page.locator('.Toastify__toast').filter({ hasText: /Burger Clássico/ })).toHaveCount(1);
+  await page.locator('.Toastify__toast').first().hover();
+  await expect(page.locator('.Toastify__toast').filter({ hasText: /Burger Clássico/ })).toHaveCount(0, { timeout: 5500 });
   await page.getByRole('button', { name: 'Abrir carrinho' }).click();
   await expect(page.getByRole('heading', { name: 'Carrinho de compras' })).toBeVisible();
   await expect(page.getByText('R$ 22,90 / unidade')).toBeVisible();

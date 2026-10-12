@@ -4,7 +4,7 @@ Educational storefront originally built during the Kenzie Academy Brasil Full St
 
 ## Live preview (under validation)
 
-**[Open KenzieBurguer 2.0 preview](https://kenzie-burguer-v2-template-pedro-henrique-eoyd-p7n8jly2q.vercel.app/)**.
+**[Open KenzieBurguer 2.0 preview](https://kenzie-burguer-v2-template-pedro-henrique-eoyd-64nnvoova.vercel.app/)**.
 
 **This is not a commercial store.** The six catalog products, images and prices are illustrative. There is no order placement, checkout, payment processing or actual inventory.
 

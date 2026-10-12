@@ -4,6 +4,7 @@ import { StyledCartProductCard } from './style';
 import { StyledTitle } from '../../../../styles/typography';
 import { IProductCart } from '../../../../providers/CartContext/@types';
 import { CartContext } from '../../../../providers/CartContext/CartContext';
+import { getProductPhoto } from '../../../../providers/CartContext/productPhotos';
 
 const money = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -13,7 +14,14 @@ const CartProductCard = ({ name, img, id, category, price, quantity }: IProductC
   return (
     <StyledCartProductCard>
       <div className='imageBox'>
-        <img src={img} alt={name} />
+        <img
+          src={getProductPhoto(id, img)}
+          alt={name}
+          onError={(event) => {
+            event.currentTarget.onerror = null;
+            event.currentTarget.src = img;
+          }}
+        />
       </div>
       <div className='contentBox'>
         <div className='productInfo'>

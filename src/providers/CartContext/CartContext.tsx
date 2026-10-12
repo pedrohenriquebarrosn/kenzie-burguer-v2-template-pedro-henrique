@@ -54,9 +54,8 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
     setProductCart(newProductCart);
   };
 
-  const removeAllProducts = (id: number) => {
-    const newProduct = productCart.filter((product) => product.id === id);
-    setProductCart(newProduct);
+  const removeAllProducts = () => {
+    setProductCart([]);
   };
 
   const totalValue = productCart.reduce(

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { IUser, IRegisterFormValues, ILoginFormValues, IDefaultProviderProps, IUserContext } from './@types';
 import { getSessionUser, signUp, signIn, signOut, SupabaseUser } from '../../services/supabase';
+import { useLanguage } from '../../i18n';
 
 export const UserContext = createContext({} as IUserContext);
 const DEMO_SESSION = '@KENZIE_BURGUER_DEMO';
@@ -18,6 +19,7 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isDemo, setIsDemo] = useState(false);
   const navigate = useNavigate();
+  const { t } = useLanguage();
   useEffect(() => {
     let active = true;
     (async () => {
@@ -27,7 +29,7 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
       try {
         const u = await getSessionUser();
         if (active && u) setUser(asUser(u));
-      } catch { if (active) toast.error('Não foi possível recuperar sua sessão.'); }
+      } catch { if (active) toast.error(t('Não foi possível recuperar sua sessão.')); }
       finally { if (active) setLoading(false); }
     })();
     return () => { active = false; };
@@ -36,12 +38,12 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
     setLoading(true);
     try {
       const response = await signUp({...formData, app:'kenzieburguer'});
-      toast.success(response.access_token
+      toast.success(t(response.access_token
         ? 'Conta criada com sucesso. Faça login.'
-        : 'Cadastro recebido. Confirme seu email para ativar a conta.');
+        : 'Cadastro recebido. Confirme seu email para ativar a conta.'));
       navigate('/');
     } catch (error: any) {
-      toast.error(error?.message || 'Não foi possível cadastrar.');
+      toast.error(t(error?.message || 'Não foi possível cadastrar.'));
     } finally { setLoading(false); }
   };
   const userLogin = async (formData: ILoginFormValues) => {
@@ -52,10 +54,10 @@ export const UserProvider = ({ children }: IDefaultProviderProps) => {
       localStorage.removeItem(DEMO_SESSION);
       setIsDemo(false);
       setUser(asUser(response.user));
-      toast.success('Login feito com sucesso!');
+      toast.success(t('Login feito com sucesso!'));
       navigate('/shop');
     } catch(error: any) {
-      toast.error(error?.message || 'Não foi possível fazer login.');
+      toast.error(t(error?.message || 'Não foi possível fazer login.'));
     } finally { setLoading(false); }
   };
   const startDemo = () => {

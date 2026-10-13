@@ -8,10 +8,12 @@ import LogoKenzieBurguer from '../../assets/LogoKenzieBurguer.svg';
 import { StyledContainer } from '../../styles/grid';
 import { CartContext } from '../../providers/CartContext/CartContext';
 import { UserContext } from '../../providers/UserContext/UserContext';
+import { useLanguage } from '../../i18n';
 
 const Header = () => {
   const { setCartModal, totalItems } = useContext(CartContext);
   const { userLogOut } = useContext(UserContext);
+  const { t } = useLanguage();
 
   const openModal = () => {
     setCartModal(true);
@@ -32,7 +34,7 @@ const Header = () => {
               <button
                 type='button'
                 className='cartButton'
-                aria-label='Abrir carrinho'
+                aria-label={t('Abrir carrinho')}
                 onClick={() => {
                   openModal();
                 }}
@@ -40,7 +42,7 @@ const Header = () => {
                 <MdShoppingCart size={26} />
                 {totalItems > 0 && <span className='cartCount' aria-hidden='true'>{totalItems}</span>}
               </button>
-              <button type='button' aria-label='Sair' onClick={() => userLogOut()}>
+              <button type='button' aria-label={t('Sair')} onClick={() => userLogOut()}>
                 <MdLogout size={28} />
               </button>
             </div>

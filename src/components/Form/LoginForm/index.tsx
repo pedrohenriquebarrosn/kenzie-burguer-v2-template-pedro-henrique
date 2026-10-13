@@ -5,6 +5,7 @@ import { UserContext } from '../../../providers/UserContext/UserContext';
 import { StyledButton } from '../../../styles/button';
 import { StyledForm } from '../../../styles/form';
 import Input from '../Input';
+import { useLanguage } from '../../../i18n';
 
 const LoginForm = () => {
   const {
@@ -13,6 +14,7 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<ILoginFormValues>();
   const { userLogin } = useContext(UserContext);
+  const { t } = useLanguage();
 
   const submit: SubmitHandler<ILoginFormValues> = (formData) => {
     userLogin(formData);
@@ -33,7 +35,7 @@ const LoginForm = () => {
         error={errors.password}
       />
       <StyledButton type='submit' $buttonSize='default' $buttonStyle='green'>
-        Entrar
+        {t('Entrar')}
       </StyledButton>
     </StyledForm>
   );

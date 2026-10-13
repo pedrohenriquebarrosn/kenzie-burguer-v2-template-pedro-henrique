@@ -3,9 +3,11 @@ import { MdSearch } from 'react-icons/md';
 import { StyledSearchForm } from './style';
 import { StyledButton } from '../../../styles/button';
 import { CartContext } from '../../../providers/CartContext/CartContext';
+import { useLanguage } from '../../../i18n';
 
 const SearchForm = () => {
   const { searchTerm, setSearchTerm } = useContext(CartContext);
+  const { t } = useLanguage();
   // Keep what the visitor is typing separate from the active catalog filter.
   const [draftTerm, setDraftTerm] = useState(searchTerm);
 
@@ -19,12 +21,12 @@ const SearchForm = () => {
     >
       <input
         type='search'
-        placeholder='Pesquisar produtos'
-        aria-label='Pesquisar produtos'
+        placeholder={t('Pesquisar produtos')}
+        aria-label={t('Pesquisar produtos')}
         value={draftTerm}
         onChange={(event) => setDraftTerm(event.target.value)}
       />
-      <StyledButton type='submit' $buttonSize='medium' $buttonStyle='green' aria-label='Pesquisar'>
+      <StyledButton type='submit' $buttonSize='medium' $buttonStyle='green' aria-label={t('Pesquisar')}>
         <MdSearch />
       </StyledButton>
     </StyledSearchForm>

@@ -4,12 +4,11 @@ import { CartProvider } from './providers/CartContext/CartContext';
 import { UserProvider } from './providers/UserContext/UserContext';
 import Router from './Routes/routes';
 import { GlobalStyles } from './styles/global';
-import { LanguageProvider, LanguageSwitcher } from './i18n';
+import { LanguageProvider } from './i18n';
 import './i18n.css';
 
 const App = () => (
   <LanguageProvider>
-    <LanguageSwitcher />
     <UserProvider>
       <CartProvider>
         <GlobalStyles />

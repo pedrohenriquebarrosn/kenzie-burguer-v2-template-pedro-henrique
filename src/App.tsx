@@ -16,7 +16,7 @@ const App = () => (
       </CartProvider>
     </UserProvider>
     <ToastContainer
-      position='top-right'
+      position='bottom-left'
       autoClose={2500}
       limit={2}
       hideProgressBar={false}

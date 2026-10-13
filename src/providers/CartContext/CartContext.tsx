@@ -4,6 +4,7 @@ import { ICartContext, IDefaultProviderProps, IProduct, IProductCart } from './@
 import { UserContext } from '../UserContext/UserContext';
 import { demoProducts } from './demoProducts';
 import { db } from '../../services/supabase';
+import { useLanguage } from '../../i18n';
 
 export const CartContext = createContext({} as ICartContext);
 
@@ -30,6 +31,7 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
   const [cartModal, setCartModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const { isDemo, user } = useContext(UserContext);
+  const { t } = useLanguage();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [productCart, setProductCart] = useState<IProductCart[]>([]);
   const cartRef = useRef<IProductCart[]>([]);
@@ -79,7 +81,7 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
         replaceCart(hydratedCart(catalog, selected));
       } catch (error: any) {
         if (active && scopeRef.current === scope) {
-          toast.error(error?.message || 'Erro ao carregar os produtos.', { toastId: 'burger-load-error' });
+          toast.error(t(error?.message || 'Erro ao carregar os produtos.'), { toastId: 'burger-load-error' });
         }
       }
     })();
@@ -108,7 +110,7 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
     }).catch(async () => {
       if (scopeRef.current !== scope) return;
       syncFailedRef.current = true;
-      toast.error('Não foi possível salvar o carrinho. Atualize a página e tente novamente.', { toastId: 'burger-cart-save-error' });
+      toast.error(t('Não foi possível salvar o carrinho. Atualize a página e tente novamente.'), { toastId: 'burger-cart-save-error' });
       // Read back authoritative data; do not pretend that optimistic changes persisted.
       try {
         const selected = await db<StoredCartRow[]>('kenzieburguer_cart_items?select=product_id,quantity');
@@ -122,11 +124,11 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
     const previous = existing?.quantity || 0;
     if (quantity === previous) return;
     if (quantity > MAX_QUANTITY) {
-      toast.info('Limite de 99 unidades por produto.', { toastId: 'burger-cart-quantity-max' });
+      toast.info(t('Limite de 99 unidades por produto.'), { toastId: 'burger-cart-quantity-max' });
       return;
     }
     if (syncFailedRef.current) {
-      toast.error('Atualize a página para sincronizar o carrinho.', { toastId: 'burger-cart-save-error' });
+      toast.error(t('Atualize a página para sincronizar o carrinho.'), { toastId: 'burger-cart-save-error' });
       return;
     }
     const next = Math.max(0, quantity);
@@ -136,10 +138,10 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
         ? cartRef.current.map((row) => row.id === product.id ? { ...row, quantity: next } : row)
         : [...cartRef.current, { ...product, quantity: next }];
     replaceCart(updated);
-    const label = product.name.replace(/\s*\(demo\)\s*/gi, '').trim();
+    const label = t(product.name).replace(/\s*\(demo\)\s*/gi, '').trim();
     const feedback = next === 0
-      ? `${label} removido da sacola`
-      : `${label}: ${next} ${next === 1 ? 'unidade' : 'unidades'} na sacola`;
+      ? `${label}${t(' removido da sacola')}`
+      : `${label}: ${next} ${t(next === 1 ? 'unidade' : 'unidades')}${t(' na sacola')}`;
     showCartFeedback(feedback);
     persistChange(product.id, previous, next, scopeRef.current);
   };
@@ -162,7 +164,7 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
   const removeAllProducts = () => {
     if (cartRef.current.length === 0 || syncFailedRef.current) return;
     replaceCart([]);
-    showCartFeedback('Sacola esvaziada');
+    showCartFeedback(t('Sacola esvaziada'));
     if (isDemo) return;
     const scope = scopeRef.current;
     writeQueue.current = writeQueue.current.then(async () => {
@@ -172,7 +174,7 @@ export const CartProvider = ({ children }: IDefaultProviderProps) => {
     }).catch(async () => {
       if (scopeRef.current !== scope) return;
       syncFailedRef.current = true;
-      toast.error('Não foi possível esvaziar o carrinho. Atualize a página.', { toastId: 'burger-cart-save-error' });
+      toast.error(t('Não foi possível esvaziar o carrinho. Atualize a página.'), { toastId: 'burger-cart-save-error' });
     });
   };
 

@@ -5,6 +5,7 @@ import { StyledParagraph, StyledTitle } from '../../../styles/typography';
 import { IProduct } from '../../../providers/CartContext/@types';
 import { CartContext } from '../../../providers/CartContext/CartContext';
 import { getProductPhoto } from '../../../providers/CartContext/productPhotos';
+import { useLanguage } from '../../../i18n';
 
 interface IProductCard {
   product: IProduct;
@@ -12,12 +13,13 @@ interface IProductCard {
 
 const ProductCard = ({ product }: IProductCard) => {
   const { addProductToCart } = useContext(CartContext);
+  const { t, lang } = useLanguage();
   return (
     <StyledProductCard>
       <div className='imageBox'>
         <img
           src={getProductPhoto(product.id, product.img)}
-          alt={product.name}
+          alt={t(product.name)}
           loading='lazy'
           onError={(event) => {
             event.currentTarget.onerror = null;
@@ -27,18 +29,18 @@ const ProductCard = ({ product }: IProductCard) => {
       </div>
       <div className='content'>
         <StyledTitle tag='h3' $fontSize='three'>
-          {product.name}
+          {t(product.name)}
         </StyledTitle>
         <StyledParagraph className='category'>
-          {product.category}
+          {t(product.category)}
         </StyledParagraph>
-        <StyledParagraph className='price'>{product.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</StyledParagraph>
+        <StyledParagraph className='price'>{product.price.toLocaleString(lang === 'en' ? 'en-US' : 'pt-BR', { style: 'currency', currency: 'BRL' })}</StyledParagraph>
         <StyledButton
           $buttonSize='medium'
           $buttonStyle='green'
           onClick={() => addProductToCart(product)}
         >
-          Adicionar
+          {t('Adicionar')}
         </StyledButton>
       </div>
     </StyledProductCard>

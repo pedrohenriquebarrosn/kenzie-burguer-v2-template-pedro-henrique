@@ -74,3 +74,14 @@ test('demo mobile catalog fits viewport and search remains available', async ({ 
   await expect.poll(async () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: 'test-results/burger-polish-mobile.png', fullPage: true });
 });
+
+
+test('cart feedback leaves desktop cart control available immediately', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Acessar demonstração' }).click();
+  await page.getByRole('button', { name: 'Adicionar' }).first().click();
+  await expect(page.locator('.Toastify__toast-container')).toHaveClass(/Toastify__toast-container--bottom-left/);
+  await page.getByRole('button', { name: 'Abrir carrinho' }).click({ timeout: 3500 });
+  await expect(page.getByRole('heading', { name: 'Carrinho de compras' })).toBeVisible();
+});

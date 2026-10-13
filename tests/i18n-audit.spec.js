@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 test("English deep link covers sign-in, catalog, cart and preserves counts",async({page})=>{
   await page.goto("/?lang=en");
   await expect(page.locator("html")).toHaveAttribute("lang","en");

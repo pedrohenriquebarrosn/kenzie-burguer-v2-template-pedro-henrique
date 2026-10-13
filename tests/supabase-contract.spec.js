@@ -83,5 +83,5 @@ test('registration does not claim success when Supabase refuses unapproved email
   await page.getByLabel('Senha').fill('Valid#123Ab');
   await page.getByRole('button',{name:'Cadastrar'}).click();
   await expect(page.getByText('Email address not authorized')).toBeVisible();
-  await expect(page).toHaveURL(/\/register$/);
+  await expect(page).toHaveURL(/\/register(?:\?lang=(?:pt|en))?$/);
 });

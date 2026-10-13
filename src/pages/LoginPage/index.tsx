@@ -4,7 +4,7 @@ import { UserContext } from '../../providers/UserContext/UserContext';
 import { StyledLoginPage } from './style';
 import LoginForm from '../../components/Form/LoginForm';
 import IllustrationBox from '../../components/IllustrationBox';
-import { useLanguage } from '../../i18n';
+import { useLanguage, LanguageSwitcher } from '../../i18n';
 
 import { StyledButton, StyledButtonLink } from '../../styles/button';
 import { StyledContainer, StyledGridBox } from '../../styles/grid';
@@ -19,6 +19,7 @@ const LoginPage = () => {
   }, [loading, user, navigate]);
   return (
   <StyledLoginPage>
+    <div className='auth-language-switch'><LanguageSwitcher /></div>
     <StyledContainer>
       <div className='flexGrid'>
         <div className='left'>

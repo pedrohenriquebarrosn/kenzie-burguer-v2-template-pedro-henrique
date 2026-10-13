@@ -8,7 +8,7 @@ import LogoKenzieBurguer from '../../assets/LogoKenzieBurguer.svg';
 import { StyledContainer } from '../../styles/grid';
 import { CartContext } from '../../providers/CartContext/CartContext';
 import { UserContext } from '../../providers/UserContext/UserContext';
-import { useLanguage } from '../../i18n';
+import { useLanguage, LanguageSwitcher } from '../../i18n';
 
 const Header = () => {
   const { setCartModal, totalItems } = useContext(CartContext);
@@ -30,6 +30,7 @@ const Header = () => {
           />
           <nav className='nav' role='navigation'>
             <SearchForm />
+            <LanguageSwitcher />
             <div className='buttons'>
               <button
                 type='button'

@@ -8,10 +8,12 @@ import ProductList from '../../components/ProductList';
 import { StyledContainer } from '../../styles/grid';
 import { CartContext } from '../../providers/CartContext/CartContext';
 import { UserContext } from '../../providers/UserContext/UserContext';
+import { useLanguage } from '../../i18n';
 
 const ShopPage = () => {
   const { cartModal, products } = useContext(CartContext);
   const { isDemo } = useContext(UserContext);
+  const { t } = useLanguage();
 
   return (
     <StyledShopPage>
@@ -23,17 +25,17 @@ const ShopPage = () => {
             <MdInfoOutline aria-hidden='true' size={20} />
             <span>
               {isDemo
-                ? 'Loja demonstrativa: produtos e preços fictícios. Não há pedidos, pagamentos ou contas reais.'
-                : 'Projeto educacional: catálogo e preços ilustrativos. Carrinho salvo na conta; pedidos e pagamentos não estão disponíveis.'}
+                ? t('Loja demonstrativa: produtos e preços fictícios. Não há pedidos, pagamentos ou contas reais.')
+                : t('Projeto educacional: catálogo e preços ilustrativos. Carrinho salvo na conta; pedidos e pagamentos não estão disponíveis.')}
             </span>
           </p>
-          <section className='catalogIntro' aria-label='Introdução ao catálogo'>
+          <section className='catalogIntro' aria-label={t('Introdução ao catálogo')}>
             <div>
               <span className='eyebrow'>KENZIE BURGUER 2.0</span>
-              <h1>Escolha seus favoritos</h1>
-              <p>Explore o cardápio ilustrativo e monte seu carrinho.</p>
+              <h1>{t('Escolha seus favoritos')}</h1>
+              <p>{t('Explore o cardápio ilustrativo e monte seu carrinho.')}</p>
             </div>
-            <span className='productCount'>{products.length} produtos no catálogo</span>
+            <span className='productCount'>{products.length}{t(' produtos no catálogo')}</span>
           </section>
           <ProductList />
         </StyledContainer>

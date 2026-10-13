@@ -1,25 +1,53 @@
-# KenzieBurguer 2.0 — Product Catalog & Shopping Cart
+# KenzieBurguer 2.0 — Interactive Storefront
 
-A responsive React and TypeScript e-commerce learning project featuring authentication, a searchable product catalog, and an interactive shopping cart.
+**Responsive React and TypeScript storefront with product search, shopping-cart management, and authentication flows.**
 
-**[▶ See Project Live ↗](https://kenzie-burguer-v2-template-pedro-henrique-eoyd-pxpprhu2s.vercel.app/)** — updated preview, including a guest demonstration mode.
+[**↗ See live preview**](https://kenzie-burguer-v2-template-pedro-henrique-eoyd-c5ec30mk6.vercel.app/) · [**↗ Code on GitHub**](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/tree/review/i18n-pt-en-20261013)
 
-## Features
+## Overview
 
-- Registration and sign-in interfaces using Supabase Auth.
-- Searchable sample-product catalog with responsive layouts.
-- Add and remove cart items and adjust quantities.
-- Guest demonstration without creating a real account.
-- PostgreSQL-backed cart implementation with per-user Row Level Security policies.
+KenzieBurguer 2.0 is an educational e-commerce interface initially created during Full Stack training and subsequently enhanced with a bilingual experience, a guest demonstration, and Supabase-backed account and cart flows.
 
-## Technologies
+## Key features
 
-React · TypeScript · Vite · Supabase Auth · PostgreSQL · RLS · styled-components
+- Explore a responsive catalog of six illustrative food products.
+- Search by product name or word prefix.
+- Add products to the cart, change quantities, remove items, and calculate totals.
+- Explore the store immediately using a separate, browser-local guest mode.
+- Register, sign in, and manage an authenticated cart with Supabase Auth and PostgreSQL.
+- Restrict authenticated cart records to their owners through Row Level Security.
+- Switch between English and Portuguese.
 
-## Version
+## Technology stack
 
-The live preview uses the [updated review branch](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/tree/review/i18n-pt-en-20261013); the default `main` branch contains an earlier version. The catalog is illustrative and does not offer real payments or order placement. The underlying policies and integration have been reviewed, but full live cross-account isolation and quantity-persistence testing are not yet complete.
+React 18 · TypeScript · Vite · React Router · Styled Components · Material UI · Supabase Auth · PostgreSQL · RLS · Playwright
 
-## Run locally
+## Explore and run locally
 
-Refer to the project's `package.json` scripts and configure the required Supabase environment variables for authenticated flows.
+The live preview reflects [the updated implementation branch](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/tree/review/i18n-pt-en-20261013). The default `main` branch preserves an earlier training version.
+
+```bash
+git clone https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique.git
+cd kenzie-burguer-v2-template-pedro-henrique
+git switch review/i18n-pt-en-20261013
+yarn install --frozen-lockfile
+yarn dev
+```
+
+The Supabase client can be configured using public `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` values. Keep all privileged database credentials outside the frontend.
+
+## Engineering and verification
+
+- Guest shopping, product search, cart operations, and responsive behavior were exercised in automated browser tests.
+- Authenticated UI and cart-persistence contracts were exercised with simulated Supabase HTTP responses.
+- Cart storage uses PostgreSQL, with owner-restricted RLS policies and quantity constraints.
+
+Products, images, and prices in this demonstration are illustrative. The interface is a portfolio project, not a commercial checkout, ordering, or payment service.
+
+---
+
+## Author
+
+**Pedro Henrique Barros Nascimento** — Business Administration graduate and Full Stack development alumnus of Kenzie Academy Brasil.
+
+[GitHub profile](https://github.com/pedrohenriquebarrosn) · [LinkedIn](https://www.linkedin.com/in/pedro-henrique-barros-nascimento-2bb684251/)

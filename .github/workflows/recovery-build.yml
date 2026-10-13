@@ -5,6 +5,7 @@ on:
       - fix/recover-auth-cart-20261012
       - design/kenzieburguer-ux-refresh-20261012
       - review/i18n-pt-en-20261013
+      - main
   workflow_dispatch:
 
 permissions:

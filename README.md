@@ -1,39 +1,53 @@
-# KenzieBurguer 2.0 — React + TypeScript Storefront
+# KenzieBurguer 2.0 — Interactive Storefront
 
-Educational storefront originally built during the Kenzie Academy Brasil Full Stack program, with a real backend integration now implemented on an isolated recovery branch.
+**Responsive React and TypeScript storefront with product search, shopping-cart management, and authentication flows.**
 
-## Live preview (under validation)
+[**↗ See live preview**](https://kenzie-burguer-v2-template-pedro-henrique-eoyd-c5ec30mk6.vercel.app/) · [**↗ Code on GitHub**](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/tree/review/i18n-pt-en-20261013)
 
-**[Open KenzieBurguer 2.0 preview](https://kenzie-burguer-v2-template-pedro-henrique-eoyd-i0ogtknaz.vercel.app/)**.
+## Overview
 
-**This is not a commercial store.** The six catalog products, images and prices are illustrative. There is no order placement, checkout, payment processing or actual inventory.
+KenzieBurguer 2.0 is an educational e-commerce interface initially created during Full Stack training and subsequently enhanced with a bilingual experience, a guest demonstration, and Supabase-backed account and cart flows.
 
-- **Guest demonstration:** enter without an account, browse products, search, and use an in-memory cart.
-- **Authenticated mode:** Supabase Auth registration/login, protected storefront, server-backed catalog and cart per signed-in account.
-- **Persistence:** cart entries are stored in PostgreSQL table `kenzieburguer_cart_items`, and RLS limits access to their authenticated owner.
-- **Email limitation:** Supabase built-in SMTP sends to approved team emails only; real visitor email confirmation requires additional SMTP/redirect configuration. Do not interpret a successful build as verified email delivery.
+## Key features
 
-## Stack
+- Explore a responsive catalog of six illustrative food products.
+- Search by product name or word prefix.
+- Add products to the cart, change quantities, remove items, and calculate totals.
+- Explore the store immediately using a separate, browser-local guest mode.
+- Register, sign in, and manage an authenticated cart with Supabase Auth and PostgreSQL.
+- Restrict authenticated cart records to their owners through Row Level Security.
+- Switch between English and Portuguese.
 
-React 18 · TypeScript · Vite · React Router · React Hook Form · Styled Components · Material UI · React Toastify · Supabase Auth · PostgreSQL · Row Level Security.
+## Technology stack
 
-## Run locally
+React 18 · TypeScript · Vite · React Router · Styled Components · Material UI · Supabase Auth · PostgreSQL · RLS · Playwright
+
+## Explore and run locally
+
+The live preview reflects [the updated implementation branch](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/tree/review/i18n-pt-en-20261013). The default `main` branch preserves an earlier training version.
 
 ```bash
 git clone https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique.git
 cd kenzie-burguer-v2-template-pedro-henrique
-git checkout fix/recover-auth-cart-20261012
+git switch review/i18n-pt-en-20261013
 yarn install --frozen-lockfile
 yarn dev
 ```
 
-The public client values `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` are optional overrides in `src/services/supabase.js`. Do not put secret keys in a client bundle.
+The Supabase client can be configured using public `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` values. Keep all privileged database credentials outside the frontend.
 
-## Verification
+## Engineering and verification
 
-- [Recovery PR](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/pull/1) (draft).
-- [Passing guest UI and API-contract tests](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/actions/runs/38288227055) test login, HTTP-backed cart rehydration, search and guest behavior with simulated Supabase responses.
-- Staging deployment with the backend integration reached `READY`; further changes must be built and deployed before replacing this URL.
-- **Pending:** live email confirmation, authenticated catalog/cart operations and cross-user isolation, checked end-to-end against the actual hosted Supabase instance.
+- Guest shopping, product search, cart operations, and responsive behavior were exercised in automated browser tests.
+- Authenticated UI and cart-persistence contracts were exercised with simulated Supabase HTTP responses.
+- Cart storage uses PostgreSQL, with owner-restricted RLS policies and quantity constraints.
 
-Production remains unchanged. Do not claim real orders or economic transactions from this demonstration.
+Products, images, and prices in this demonstration are illustrative. The interface is a portfolio project, not a commercial checkout, ordering, or payment service.
+
+---
+
+## Author
+
+**Pedro Henrique Barros Nascimento** — Business Administration graduate and Full Stack development alumnus of Kenzie Academy Brasil.
+
+[GitHub profile](https://github.com/pedrohenriquebarrosn) · [LinkedIn](https://www.linkedin.com/in/pedro-henrique-barros-nascimento-2bb684251/)

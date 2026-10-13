@@ -1,6 +1,7 @@
 import { FieldError, UseFormRegisterReturn } from 'react-hook-form';
 import { StyledTextField } from '../../../styles/form';
 import { StyledParagraph } from '../../../styles/typography';
+import { useLanguage } from '../../../i18n';
 
 interface IInputProps {
   label: string;
@@ -9,13 +10,14 @@ interface IInputProps {
   error?: FieldError;
 }
 
-const Input = ({ label, type, register, error }: IInputProps) => (
-  <fieldset>
-    <StyledTextField label={label} type={type} {...register} />
+const Input = ({ label, type, register, error }: IInputProps) => {
+  const { t } = useLanguage();
+  return <fieldset>
+    <StyledTextField label={t(label)} type={type} {...register} />
     {error ? (
-      <StyledParagraph fontColor='red'>{error?.message}</StyledParagraph>
+      <StyledParagraph fontColor='red'>{t(error?.message ?? '')}</StyledParagraph>
     ) : null}
-  </fieldset>
-);
+  </fieldset>;
+};
 
 export default Input;

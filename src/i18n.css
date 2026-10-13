@@ -1,0 +1,10 @@
+.burger-language-switch{display:flex;align-items:center;gap:4px;border:1px solid #bdd9ca;background:#f7fcf9;padding:4px;border-radius:10px;flex-shrink:0}
+.burger-language-switch button{background:transparent;border:0;border-radius:7px;color:#145e43;min-height:36px;min-width:42px;padding:7px 10px;font:700 12px Inter,system-ui,sans-serif}
+.burger-language-switch button[aria-pressed="true"]{color:#fff;background:#24a66a}
+.burger-language-switch button:focus-visible{outline:2px solid #2ab06a;outline-offset:2px}
+.auth-language-switch{position:absolute;right:clamp(15px,4vw,46px);top:14px;z-index:50}
+@media(max-width:680px){
+ .burger-language-switch button{min-width:36px;min-height:32px;padding:5px}
+ header .flexGrid .burger-language-switch{grid-column:1/-1;grid-row:3;justify-self:end}
+ .auth-language-switch{right:9px;top:8px}
+}

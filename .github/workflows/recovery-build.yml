@@ -1,0 +1,36 @@
+name: Recovery branch build
+on:
+  push:
+    branches:
+      - fix/recover-auth-cart-20261012
+      - design/kenzieburguer-ux-refresh-20261012
+      - review/i18n-pt-en-20261013
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - run: corepack enable
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: npm install --no-save --package-lock=false --no-audit --no-fund @playwright/test@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kenzieburguer-e2e-artifacts
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore

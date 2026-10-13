@@ -3,12 +3,16 @@ import { Link } from 'react-router-dom';
 import { StyledRegisterPage } from './style';
 import RegisterForm from '../../components/Form/RegisterForm';
 import IllustrationBox from '../../components/IllustrationBox';
+import { useLanguage, LanguageSwitcher } from '../../i18n';
 
 import { StyledContainer, StyledGridBox } from '../../styles/grid';
 import { StyledTitle } from '../../styles/typography';
 
-const RegisterPage = () => (
+const RegisterPage = () => {
+  const { t } = useLanguage();
+  return (
     <StyledRegisterPage>
+      <div className='auth-language-switch'><LanguageSwitcher /></div>
       <StyledContainer>
         <div className='flexGrid'>
           <div className='left'>
@@ -18,9 +22,9 @@ const RegisterPage = () => (
             <StyledGridBox className='formBox'>
               <header>
                 <StyledTitle tag='h1' $fontSize='three'>
-                  Cadastro
+                  {t('Cadastro')}
                 </StyledTitle>
-                <Link to='/'>Retornar para o login</Link>
+                <Link to='/'>{t('Retornar para o login')}</Link>
               </header>
 
               <RegisterForm />
@@ -30,5 +34,6 @@ const RegisterPage = () => (
       </StyledContainer>
     </StyledRegisterPage>
   );
+};
 
 export default RegisterPage;

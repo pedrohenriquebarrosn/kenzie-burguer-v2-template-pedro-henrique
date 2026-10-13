@@ -49,4 +49,25 @@ export const StyledRegisterPage = styled.main`
       }
     }
   }
+
+  background: #f7faf8;
+  padding: 24px 0;
+
+  .formBox {
+    width: 100%;
+    max-width: 465px;
+    margin: auto;
+    padding: 28px;
+    background: #fff;
+    border: 1px solid #e3eee7;
+    border-radius: 18px;
+    box-shadow: 0 14px 45px rgba(31,72,42,.055);
+  }
+  @media (max-width: 750px) {
+    .flexGrid {
+      gap: 0;
+      .right { width: 100%; }
+    }
+    .formBox { padding: 22px 18px; }
+  }
 `;

@@ -8,10 +8,12 @@ import LogoKenzieBurguer from '../../assets/LogoKenzieBurguer.svg';
 import { StyledContainer } from '../../styles/grid';
 import { CartContext } from '../../providers/CartContext/CartContext';
 import { UserContext } from '../../providers/UserContext/UserContext';
+import { useLanguage, LanguageSwitcher } from '../../i18n';
 
 const Header = () => {
-  const { setCartModal } = useContext(CartContext);
+  const { setCartModal, totalItems } = useContext(CartContext);
   const { userLogOut } = useContext(UserContext);
+  const { t } = useLanguage();
 
   const openModal = () => {
     setCartModal(true);
@@ -28,16 +30,20 @@ const Header = () => {
           />
           <nav className='nav' role='navigation'>
             <SearchForm />
+            <LanguageSwitcher />
             <div className='buttons'>
               <button
                 type='button'
+                className='cartButton'
+                aria-label={t('Abrir carrinho')}
                 onClick={() => {
                   openModal();
                 }}
               >
-                <MdShoppingCart size={28} />
+                <MdShoppingCart size={26} />
+                {totalItems > 0 && <span className='cartCount' aria-hidden='true'>{totalItems}</span>}
               </button>
-              <button type='button' onClick={() => userLogOut()}>
+              <button type='button' aria-label={t('Sair')} onClick={() => userLogOut()}>
                 <MdLogout size={28} />
               </button>
             </div>

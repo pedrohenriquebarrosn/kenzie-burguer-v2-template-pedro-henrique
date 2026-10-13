@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
-  *{
+  * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -10,12 +10,20 @@ export const GlobalStyles = createGlobalStyle`
     text-decoration: none;
   }
 
-  button{
-    cursor: pointer;
+  html, body, #root {
+    min-height: 100%;
   }
 
-  dialog{
-    display: unset;
-    position: unset;
+  body, button, input, select, textarea {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
+
+  body {
+    color: #28382e;
+    background: #f8faf9;
+  }
+
+  button { cursor: pointer; }
+
+  dialog { display: unset; position: unset; }
 `;

@@ -5,6 +5,7 @@ import { StyledButton } from '../../../styles/button';
 import { StyledForm } from '../../../styles/form';
 import { IRegisterFormValues } from '../../../providers/UserContext/@types';
 import { UserContext } from '../../../providers/UserContext/UserContext';
+import { useLanguage } from '../../../i18n';
 
 const RegisterForm = () => {
   const {
@@ -13,6 +14,7 @@ const RegisterForm = () => {
     formState: { errors },
   } = useForm<IRegisterFormValues>();
   const { userRegister } = useContext(UserContext);
+  const { t } = useLanguage();
 
   const submit: SubmitHandler<IRegisterFormValues> = (formData) => {
     userRegister(formData);
@@ -39,7 +41,7 @@ const RegisterForm = () => {
         error={errors.password}
       />
       <StyledButton type='submit' $buttonSize='default' $buttonStyle='gray'>
-        Cadastrar
+        {t('Cadastrar')}
       </StyledButton>
     </StyledForm>
   );

@@ -1,98 +1,77 @@
 import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { toast } from 'react-toastify';
-import {
-  IUser,
-  IRegisterFormValues,
-  ILoginFormValues,
-  IDefaultProviderProps,
-  IUserContext,
-} from './@types';
-import { api } from '../../services/api';
+import { IUser, IRegisterFormValues, ILoginFormValues, IDefaultProviderProps, IUserContext } from './@types';
+import { getSessionUser, signUp, signIn, signOut, SupabaseUser } from '../../services/supabase';
+import { useLanguage } from '../../i18n';
 
 export const UserContext = createContext({} as IUserContext);
+const DEMO_SESSION = '@KENZIE_BURGUER_DEMO';
+const DEMO_USER: IUser = {id:'demo', name:'Visitante', email:'demo@example.invalid'};
+const asUser = (u: SupabaseUser): IUser => ({
+  id: u.id,
+  name: u.user_metadata?.name || u.email?.split('@')[0] || 'Usuário',
+  email: u.email,
+});
 
 export const UserProvider = ({ children }: IDefaultProviderProps) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<IUser | null>(null);
-
+  const [isDemo, setIsDemo] = useState(false);
   const navigate = useNavigate();
-
+  const { t } = useLanguage();
   useEffect(() => {
-    const token = localStorage.getItem('@TOKEN');
-    const id = localStorage.getItem('@USERID');
-    if (token) {
-      const userAutoLogin = async () => {
-        try {
-          const response = await api.get(`/users/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setUser(response.data);
-          navigate('/shop');
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.log(error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      userAutoLogin();
-    }
+    let active = true;
+    (async () => {
+      if (localStorage.getItem(DEMO_SESSION) === 'true') {
+        setUser(DEMO_USER); setIsDemo(true); setLoading(false); return;
+      }
+      try {
+        const u = await getSessionUser();
+        if (active && u) setUser(asUser(u));
+      } catch { if (active) toast.error(t('Não foi possível recuperar sua sessão.')); }
+      finally { if (active) setLoading(false); }
+    })();
+    return () => { active = false; };
   }, []);
-
   const userRegister = async (formData: IRegisterFormValues) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await api.post('/users', formData);
-      setUser(response.data.user);
-      localStorage.setItem('@TOKEN', response.data.accessToken);
-      toast.success('Usuário cadastrado com sucesso!');
+      const response = await signUp({...formData, app:'kenzieburguer'});
+      toast.success(t(response.access_token
+        ? 'Conta criada com sucesso. Faça login.'
+        : 'Cadastro recebido. Confirme seu email para ativar a conta.'));
       navigate('/');
-    } catch (error) {
-      toast.error('Não foi possível cadastrar o usuário');
-    } finally {
-      setLoading(false);
-    }
+    } catch (error: any) {
+      toast.error(t(error?.message || 'Não foi possível cadastrar.'));
+    } finally { setLoading(false); }
   };
-
   const userLogin = async (formData: ILoginFormValues) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await api.post('/login', formData);
-      setUser(response.data.user);
-      localStorage.setItem('@TOKEN', response.data.accessToken);
-      localStorage.setItem('@USERID', response.data.user.id);
-      toast.success('Login feito com sucesso!');
+      const response = await signIn(formData);
+      if (!response.user?.id) throw new Error('Resposta inválida');
+      localStorage.removeItem(DEMO_SESSION);
+      setIsDemo(false);
+      setUser(asUser(response.user));
+      toast.success(t('Login feito com sucesso!'));
       navigate('/shop');
-    } catch (error) {
-      toast.error('Usuário ou senha incorretos');
-    } finally {
-      setLoading(false);
-    }
+    } catch(error: any) {
+      toast.error(t(error?.message || 'Não foi possível fazer login.'));
+    } finally { setLoading(false); }
   };
-
+  const startDemo = () => {
+    localStorage.setItem(DEMO_SESSION, 'true');
+    setIsDemo(true); setUser(DEMO_USER);
+    setLoading(false); navigate('/shop');
+  };
   const userLogOut = () => {
-    setUser(null);
-    localStorage.removeItem('@TOKEN');
-    localStorage.removeItem('@USERID');
+    localStorage.removeItem(DEMO_SESSION);
+    setIsDemo(false); setUser(null);
+    void signOut();
     navigate('/');
   };
-
-  return (
-    <UserContext.Provider
-      value={{
-        loading,
-        setLoading,
-        user,
-        userRegister,
-        userLogin,
-        userLogOut,
-      }}
-    >
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{
+    loading, setLoading, user, userRegister, userLogin, userLogOut, isDemo, startDemo
+  }}>{children}</UserContext.Provider>;
 };

@@ -4,42 +4,37 @@ import { StyledCartProductList } from './style';
 import { StyledButton } from '../../../styles/button';
 import { StyledParagraph } from '../../../styles/typography';
 import { CartContext } from '../../../providers/CartContext/CartContext';
+import { useLanguage } from '../../../i18n';
 
 const CartProductList = () => {
-  const { productCart, removeAllProducts, totalValue } =
+  const { productCart, removeAllProducts, totalItems, totalValue } =
     useContext(CartContext);
+  const { t, lang } = useLanguage();
 
   return (
     <StyledCartProductList>
       <ul>
         {productCart.map((cartProduct) => (
-          <CartProductCard
-            key={cartProduct.id}
-            name={cartProduct.name}
-            id={cartProduct.id}
-            img={cartProduct.img}
-            category={cartProduct.category}
-            price={cartProduct.price}
-          />
+          <CartProductCard key={cartProduct.id} {...cartProduct} />
         ))}
       </ul>
       <div className='totalBox'>
         <StyledParagraph>
-          <strong>Total </strong>
+          <strong>Total ({totalItems} {totalItems === 1 ? 'item' : t('itens')})</strong>
         </StyledParagraph>
         <StyledParagraph className='total'>
-          {totalValue.toLocaleString('pt-BR', {
+          {totalValue.toLocaleString(lang === 'en' ? 'en-US' : 'pt-BR', {
             style: 'currency',
             currency: 'BRL',
           })}
         </StyledParagraph>
       </div>
-      <StyledButton
+      <StyledButton type='button'
         $buttonSize='default'
         $buttonStyle='gray'
-        onClick={() => removeAllProducts(0)}
+        onClick={() => removeAllProducts()}
       >
-        Remover todos
+        {t('Remover todos')}
       </StyledButton>
     </StyledCartProductList>
   );

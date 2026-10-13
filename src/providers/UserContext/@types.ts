@@ -26,4 +26,6 @@ export interface IUserContext {
   userRegister: (formData: IRegisterFormValues) => Promise<void>;
   userLogin: (formData: ILoginFormValues) => Promise<void>;
   userLogOut: () => void;
+  isDemo: boolean;
+  startDemo: () => void;
 }

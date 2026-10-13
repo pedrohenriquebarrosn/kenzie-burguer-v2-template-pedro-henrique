@@ -14,5 +14,5 @@ export const ProtectedRoutes = () => {
     );
   }
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <>{user ? <Outlet /> : <Navigate to='/shop' />}</>;
+  return <>{user ? <Outlet /> : <Navigate to='/' replace />}</>;
 };

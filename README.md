@@ -2,7 +2,7 @@
 
 **Responsive React and TypeScript storefront with product search, shopping-cart management, and authentication flows.**
 
-[**↗ See live preview**](https://kenzie-burguer-v2-template-pedro-henrique-eoyd-c5ec30mk6.vercel.app/) · [**↗ Code on GitHub**](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/tree/review/i18n-pt-en-20261013)
+[**↗ See live preview**](https://kenzie-burguer-v2-template-pedro-henrique-eoyd-c5ec30mk6.vercel.app/) · [**↗ Code on GitHub**](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique)
 
 ## Overview
 
@@ -24,12 +24,11 @@ React 18 · TypeScript · Vite · React Router · Styled Components · Material 
 
 ## Explore and run locally
 
-The live preview reflects [the updated implementation branch](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/tree/review/i18n-pt-en-20261013). The default `main` branch preserves an earlier training version.
+The default `main` branch contains the reviewed storefront, Supabase integration, and cart improvements. The hosted preview is a separate deployment and should be checked against the current release.
 
 ```bash
 git clone https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique.git
 cd kenzie-burguer-v2-template-pedro-henrique
-git switch review/i18n-pt-en-20261013
 yarn install --frozen-lockfile
 yarn dev
 ```

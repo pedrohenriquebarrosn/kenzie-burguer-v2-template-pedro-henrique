@@ -4,6 +4,10 @@
 
 [**↗ See live preview**](https://kenzie-burguer-v2-template-pedro-henrique-eoyd-c5ec30mk6.vercel.app/) · [**↗ Code on GitHub**](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique)
 
+**Project status:** Reviewed bilingual storefront on the default branch, with passing build and browser checks for the guest experience. [Verification](https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique/actions/runs/38476455635).
+
+**More work:** [Professional Portfolio 2026](https://portfolio-pedro-barros-2026-review.vercel.app/en) · [Versão em português](https://portfolio-pedro-barros-2026-review.vercel.app/pt)
+
 ## Overview
 
 KenzieBurguer 2.0 is an educational e-commerce interface initially created during Full Stack training and subsequently enhanced with a bilingual experience, a guest demonstration, and Supabase-backed account and cart flows.
@@ -24,7 +28,7 @@ React 18 · TypeScript · Vite · React Router · Styled Components · Material 
 
 ## Explore and run locally
 
-The default `main` branch contains the reviewed storefront, Supabase integration, and cart improvements. The hosted preview is a separate deployment and should be checked against the current release.
+The default `main` branch contains the reviewed storefront, Supabase integration, and cart improvements. The linked application provides a published interactive preview; implementation and verification are documented below.
 
 ```bash
 git clone https://github.com/pedrohenriquebarrosn/kenzie-burguer-v2-template-pedro-henrique.git
